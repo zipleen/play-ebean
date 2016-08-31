@@ -7,7 +7,7 @@ val PlayEnhancerVersion = "1.1.0"
 lazy val root = project
   .in(file("."))
   .enablePlugins(PlayRootProject)
-  .aggregate(core)
+  .aggregate(core,plugin)
   .settings(
     name := "play-ebean-root",
     releaseCrossBuild := false
@@ -47,9 +47,9 @@ lazy val plugin = project
   )
 
 playBuildRepoName in ThisBuild := "play-ebean"
-// playBuildExtraTests := {
-//  (scripted in plugin).toTask("").value
-// }
+playBuildExtraTests := {
+  (scripted in plugin).toTask("").value
+}
 playBuildExtraPublish := {
   (PgpKeys.publishSigned in plugin).value
 }
@@ -61,15 +61,21 @@ def playEbeanDeps = Seq(
   "com.typesafe.play" %% "play-jdbc-evolutions" % PlayVersion,
   "org.avaje.ebeanorm" % "avaje-ebeanorm" % "7.6.1",
   avajeEbeanormAgent,
+  avajeEbeanormQueryAgent,
+  avajeGenerator,
   "com.typesafe.play" %% "play-test" % PlayVersion % Test
 )
 
 def sbtPlayEbeanDeps = Seq(
   avajeEbeanormAgent,
+  avajeEbeanormQueryAgent,
+  avajeGenerator,
   "com.typesafe" % "config" % "1.3.0"
 )
 
 def avajeEbeanormAgent = "org.avaje.ebeanorm" % "avaje-ebeanorm-agent" % "4.9.2"
+def avajeEbeanormQueryAgent = "org.avaje.ebeanorm" % "querybean-agent" % "2.2.1"
+def avajeGenerator = "org.avaje.ebeanorm" % "finder-generator" % "2.1.2"
 
 // Ebean enhancement
 
